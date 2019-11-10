@@ -1,4 +1,5 @@
-const baseUrl = "http://localhost:8111"
+const baseUrl = "http://localhost:8111";
+let timer = null;
 
 export const getGameConfig = async (n = 6) => {
     const response = await fetch(`${baseUrl}/getGameConfig/${n}`, { mode: 'cors' });
@@ -37,8 +38,18 @@ const transitionHandling = (e) => {
     card.addEventListener('transitionend', transitionHandling);
 };
 
-const handleCardClick = (e) => {
+const startTimer = () => {
+    timer = setInterval(countuptimer,1000);
+};
 
+export const stopTimer = () => {
+    clearInterval(timer);
+};
+
+const handleCardClick = (e) => {
+    if(!timer) {
+        startTimer();   
+    }
     const card = e.target;
     const activeCards = document.getElementsByClassName("active");
     if(activeCards.length >= 2) {
@@ -61,14 +72,13 @@ const handleCardClick = (e) => {
     const matchedCards = document.getElementsByClassName("matched");
     const totalCards = document.getElementsByClassName("gameCard");
     if(matchedCards.length === totalCards.length) {
-        alert('congrats you won');
+        stopTimer();
     }
 };
 
 
-function countuptimer(){ //TIMER FUNCTION TO CALCULATE THE TOTAL GAME TIME. 
+function countuptimer() { //TIMER FUNCTION TO CALCULATE THE TOTAL GAME TIME. 
 	var time = document.getElementById("timer").innerHTML.split(":");
-	//console.log(time);
 	var  mins = parseInt(time[0]);
 	var seconds = parseInt(time[1]);
 	if(seconds >= 60){

@@ -13,11 +13,18 @@
 
     .topBar {
         width: 100%;
-        flex-flow: column;
         display: flex;
+        justify-content: flex-end;
+        align-content: flex-end;
+        .resetButton {
+            border: 2px solid;
+            border-radius: 25px;
+            height: 50px;
+        }
         .timer {
-            align-self:flex-end;
             margin: 10px;
+            font-size: 18px;
+            font-style: bold;
         }
     }
     .gameContent {
@@ -40,20 +47,18 @@
                 pointer-events: none;
             }
             &.active {
-                border-color: green;
                 .gameCardContent {
                     display: block;
                 }
             }
             &.matched {
-                border-color: red;
                 .gameCardContent {
                     display: block;
                 }
             }
         }
         .gameCard.click {
-            transform: rotateY(180deg);
+            transform: rotateY(90deg);
         }
     }
 }
