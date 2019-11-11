@@ -1,52 +1,32 @@
 const baseUrl = "http://localhost:8111";
 let timer = null;
 
-export const getGameConfig = async (n = 6) => {
-    const response = await fetch(`${baseUrl}/getGameConfig/${n}`, { mode: 'cors' });
-    const myJson = await response.json();
-    return myJson;  
-};  
+function checkGameEndCondition() {
+    const matchedCards = document.getElementsByClassName("matched");
+    const totalCards = document.getElementsByClassName("gameCard");
+    return (matchedCards.length === totalCards.length);
+}
 
-
-export const setUpGameGrid = (n = 5, gameConfig = []) => {
-    const config  = [...gameConfig, ...gameConfig ];
-    config.sort(() => Math.random() - 0.5);
-    const gameContainer = document.getElementById("gameContent");
-    let gameCards = [];
-    for(let i=0; i < config.length ; i++) {
-        gameCards.push(`
-            <div class= "gameCard" data-id=${config[i].name} style="width:${100/n}%; height:${100/n}%;">
-                <img class="gameCardContent" style="width:100%; height:100%;"
-                    src="${config[i].url}.svg" 
-                </img>
-            </div>`
-        );
-    }
-    gameContainer.innerHTML = gameCards.join(' ');
-};
-
-export const addEventListeners = () => {
-    const gameCards = document.getElementsByClassName("gameCard");
-    for(let i=0; i < gameCards.length; i++) {
-        gameCards[i].addEventListener('click', handleCardClick);
-    }
-};
-
-const transitionHandling = (e) => {
+/* Remove the event listener when the transition ends */
+function transitionHandling(e) {
     const card = e.target;
     card.classList.remove('click');
-    card.addEventListener('transitionend', transitionHandling);
+    card.removeEventListener('transitionend', transitionHandling);
+    const gameEnded = checkGameEndCondition();
+    if(gameEnded) {
+        // HACK: Force alert to trigger in the next frame render 
+        setTimeout(() => alert(`Congrats! You matched all the cards \n Your Time : ${document.getElementById("timer").innerHTML}`), 0);
+    }
 };
 
-const startTimer = () => {
+
+function startTimer() {
     timer = setInterval(countuptimer,1000);
 };
 
-export const stopTimer = () => {
-    clearInterval(timer);
-};
 
-const handleCardClick = (e) => {
+/* Handles logic to reveal the image hidden in the cards and matching them */
+function handleCardClick(e) {
     if(!timer) {
         startTimer();   
     }
@@ -58,7 +38,7 @@ const handleCardClick = (e) => {
     }
     card.classList.add('active');
     card.classList.add('click');
-    card.addEventListener('transitionend', transitionHandling);
+    card.addEventListener('transitionend', transitionHandling, false);
     if(activeCards.length == 2){
         const card1 = activeCards[0];
         const card2 = activeCards[1];
@@ -69,9 +49,8 @@ const handleCardClick = (e) => {
             card2.removeEventListener('click', handleCardClick);
         }
     }
-    const matchedCards = document.getElementsByClassName("matched");
-    const totalCards = document.getElementsByClassName("gameCard");
-    if(matchedCards.length === totalCards.length) {
+    const gameEnded = checkGameEndCondition();
+    if(gameEnded) {
         stopTimer();
     }
 };
@@ -94,3 +73,42 @@ function countuptimer() { //TIMER FUNCTION TO CALCULATE THE TOTAL GAME TIME.
 	else 
 	document.getElementById("timer").innerHTML = mins+":"+seconds;
 }
+
+
+export const stopTimer = () => {
+    clearInterval(timer);
+    timer = null;
+};
+
+/* Fetch the game config from server async*/
+export const getGameConfig = async (n = 6) => {
+    const response = await fetch(`${baseUrl}/getGameConfig/${n}`, { mode: 'cors' });
+    const myJson = await response.json();
+    return myJson;  
+};  
+
+/* Creates the memory cards from the game config passed to the function */
+export const setUpGameGrid = (n = 5, gameConfig = []) => {
+    const config  = [...gameConfig, ...gameConfig ];
+    config.sort(() => Math.random() - 0.5);
+    const gameContainer = document.getElementById("gameContent");
+    let gameCards = [];
+    for(let i=0; i < config.length ; i++) {
+        gameCards.push(`
+            <div class= "gameCard" data-id=${config[i].name} style="width:${100/n}%; height:${100/n}%;">
+                <img class="gameCardContent" style="width:100%; height:100%;"
+                    src="${config[i].url}.svg" 
+                </img>
+            </div>`
+        );
+    }
+    gameContainer.innerHTML = gameCards.join(' ');
+};
+
+/* Adds eventListner for the memory cards */
+export const addEventListeners = () => {
+    const gameCards = document.getElementsByClassName("gameCard");
+    for(let i=0; i < gameCards.length; i++) {
+        gameCards[i].addEventListener('click', handleCardClick);
+    }
+};

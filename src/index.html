@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang = "en">
 <head>
   <meta charset="UTF-8">
   <title>The Schmemory Game</title>
@@ -10,7 +10,13 @@
       <button id="resetBoard" class="resetButton">Reset Board</button>
       <div class="timer" id="timer">00:00</div>
     </div>
-    <div class="gameContent"  id="gameContent">
+    <div class="gameContentContainer">
+      <div class="gameContent"  id="gameContent"></div>
+      <div class="difficulty">
+          <button class="difficultyButton" data-id="easy"> Easy </button>
+          <button class="difficultyButton" data-id="medium"> Medium </button>
+          <button class="difficultyButton" data-id="hard"> Hard </button>
+      </div>
     </div>
   </div>
 </body>

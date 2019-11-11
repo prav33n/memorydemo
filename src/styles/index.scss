@@ -3,8 +3,7 @@
     height: 100%;
     max-height: 720px;
     max-width: 1280px;
-    display: flex;
-    flex-flow: column;
+    border-radius: 20px;
     border: 2px solid;
     overflow: scroll;
     padding: 20px;
@@ -27,38 +26,59 @@
             font-style: bold;
         }
     }
-    .gameContent {
+    .gameContentContainer { 
+        width: 100%;
+        height: 100%;
         display: flex;
-        flex-wrap: wrap;
-        flex-flow: wrap;
-        width: 80%;
-        height: 80%;
+        flex-flow: row;
 
-        .gameCard {
-            min-width: 180px;
-            min-height: 180px;
-            border: 2px solid;
-            border-radius: 15%;
-            margin: 4px;
-            transform-style: preserve-3d;
-            transition: .3s;
-            .gameCardContent {
-                display: none;
-                pointer-events: none;
-            }
-            &.active {
-                .gameCardContent {
-                    display: block;
-                }
-            }
-            &.matched {
-                .gameCardContent {
-                    display: block;
-                }
+        .difficulty {
+            display: flex;
+            flex-direction: column;
+            width: 20%;
+
+            .difficultyButton {
+                border: 2px solid;
+                border-radius: 25px;
+                height: 50px;
+                margin: 10px;
             }
         }
-        .gameCard.click {
-            transform: rotateY(90deg);
+
+        .gameContent {
+            display: flex;
+            flex-wrap: wrap;
+            flex-flow: wrap;
+            width: 80%;
+            height: 80%;
+    
+            .gameCard {
+                min-width: 180px;
+                min-height: 180px;
+                border: 2px solid;
+                border-radius: 15%;
+                margin: 4px;
+                transform-style: preserve-3d;
+                transition: .3s;
+                .gameCardContent {
+                    visibility: hidden;
+                    pointer-events: none;
+                }
+                &.active {
+                    .gameCardContent {
+                        visibility: visible;
+                    }
+                }
+                &.matched {
+                    .gameCardContent {
+                        visibility: visible;
+                    }
+                    background: green;
+                }
+            }
+            .gameCard.click {
+                transform: rotateY(90deg);
+            }
         }
     }
 }
