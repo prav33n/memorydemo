@@ -20,7 +20,7 @@ sub-folder [example-image-server](./example-image-server).
 ## Tested Browsers
 1. Chrome
 2. Safari
-3. IOS safari
+3. IOS safari - not reponsive design
 
 ## Alternate Ways / Improvements 
 
